@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import firebase, { auth, provider } from '../firebase.js';
 import Header from '../Components/Header.js';
+
 import '../App.css';
 
 
 
 class Main extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       currentProject: '',
       currentDescription: '',
@@ -96,53 +97,20 @@ class Main extends Component {
   render() {
     return (
       <div className='dashboard'>
-        <header>
-            <div className='wrapper'>
-              <h1>GiuseppeDonadioDotCom</h1>
-              {this.state.user ?
-                <button onClick={this.logout}>Log Out</button>
-                :
-                <button onClick={this.login}>Log In</button>
-              }
-            </div>
-        </header>
+      <Header user={this.state.user} login={this.login} logout={this.logout} />
 
-        {this.state.user ?
-          <div className='wrapper'>
-            <p>Welcome {this.state.user.displayName}</p>
-            <div className='container'>
-              <section className="add-project">
-          			<form onSubmit={this.handleSubmit}>
-          		      <input type="text" name="username" placeholder={this.state.user.displayName} onChange={this.handleChange} value={this.state.username} />
-          		      <input type="text" name="currentProject" placeholder="Insert Project Title" onChange={this.handleChange} value={this.state.currentProject} />
-                    <input type="text" name="currentDescription" placeholder="Insert Description" onChange={this.handleChange} value={this.state.currentDescription} />
-          		      <button>Add Item</button>
-          		  </form>
-        		  </section>
-              <section className='display-project'>
-        		    <div className="wrapper">
-        		      <ul>
-        		        {this.state.projects.map((project) => {
-        				    return (
-        				      <li key={project.id}>
-        				        <h3>{project.title}</h3>
-                        <p>{project.description}</p>
-        				        <p>brought by: {project.user}</p>
-        				        <button onClick={() => this.removeProject(project.id)}>Remove Project</button>
-        				      </li>
-        				        )
-        				    })
-        				    }
-        		      </ul>
-        		    </div>
-    		      </section>
-            </div>
-          </div>
-
-          :
-
-          <div className='wrapper'>
+      {this.state.user ?
+        <div className='wrapper'>
+          <p>Welcome {this.state.user.displayName}</p>
           <div className='container'>
+            <section className="add-project">
+              <form onSubmit={this.handleSubmit}>
+                  <input type="text" name="username" placeholder={this.state.user.displayName} onChange={this.handleChange} value={this.state.username} />
+                  <input type="text" name="currentProject" placeholder="Insert Project Title" onChange={this.handleChange} value={this.state.currentProject} />
+                  <input type="text" name="currentDescription" placeholder="Insert Description" onChange={this.handleChange} value={this.state.currentDescription} />
+                  <button>Add Item</button>
+              </form>
+            </section>
             <section className='display-project'>
               <div className="wrapper">
                 <ul>
@@ -151,7 +119,8 @@ class Main extends Component {
                     <li key={project.id}>
                       <h3>{project.title}</h3>
                       <p>{project.description}</p>
-                      <p>by: {project.user}</p>
+                      <p>brought by: {project.user}</p>
+                      <button onClick={() => this.removeProject(project.id)}>Remove Project</button>
                     </li>
                       )
                   })
@@ -160,8 +129,31 @@ class Main extends Component {
               </div>
             </section>
           </div>
-          </div>
-        }
+        </div>
+
+        :
+
+        <div className='wrapper'>
+        <div className='container'>
+          <section className='display-project'>
+            <div className="wrapper">
+              <ul>
+                {this.state.projects.map((project) => {
+                return (
+                  <li key={project.id}>
+                    <h3>{project.title}</h3>
+                    <p>{project.description}</p>
+                    <p>by: {project.user}</p>
+                  </li>
+                    )
+                })
+                }
+              </ul>
+            </div>
+          </section>
+        </div>
+        </div>
+      }
       </div>
     );
   }
